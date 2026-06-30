@@ -1,0 +1,73 @@
+<div class="container mt-4">
+
+  <h2>Gestion de Incidencias</h2>
+
+  <div class="card p-3 mb-4">
+    <p class="text-danger" *ngIf="errorFormulario">
+      {{ errorFormulario }}
+    </p>
+
+    <div class="mb-3">
+      <label>Titulo</label>
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="titulo">
+    </div>
+
+    <div class="mb-3">
+      <label>Descripcion</label>
+      <textarea
+        class="form-control"
+        [(ngModel)]="descripcion">
+      </textarea>
+    </div>
+
+    <div class="mb-3">
+      <label>Prioridad</label>
+      <select class="form-control" [(ngModel)]="prioridad">
+        <option value="BAJA">Baja</option>
+        <option value="MEDIA">Media</option>
+        <option value="ALTA">Alta</option>
+        <option value="CRITICA">Critica</option>
+      </select>
+    </div>
+
+    <button
+      class="btn btn-primary"
+      (click)="crearIncidencia()">
+      Registrar Incidencia
+    </button>
+  </div>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Descripcion</th>
+        <th>Estado</th>
+        <th>Prioridad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let incidencia of incidencias">
+        <td>{{ incidencia.id }}</td>
+        <td>{{ incidencia.titulo }}</td>
+        <td>{{ incidencia.descripcion }}</td>
+        <td>{{ incidencia.estado }}</td>
+        <td>{{ incidencia.prioridad }}</td>
+        <td>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="eliminarIncidencia(incidencia.id!)">
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>

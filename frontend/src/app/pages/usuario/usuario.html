@@ -1,0 +1,344 @@
+<div class="layout" [class.sidebar-collapsed]="sidebarColapsado">
+
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="brand-icon"><i class="bi bi-shield-check"></i></div>
+      <div class="brand-text">
+        <h2>TELNETCOM</h2>
+        <small>PERU SAC</small>
+      </div>
+    </div>
+
+    <ul class="menu">
+      <li [class.active]="seccionActual === 'inicio'" (click)="cambiarSeccion('inicio')">
+        <span class="nav-icon"><i class="bi bi-house"></i></span><span class="menu-text">Inicio</span>
+      </li>
+      <li [class.active]="seccionActual === 'incidencias'" (click)="cambiarSeccion('incidencias')">
+        <span class="nav-icon"><i class="bi bi-ticket-detailed"></i></span><span class="menu-text">Mis Incidencias</span>
+      </li>
+      <li [class.active]="seccionActual === 'crear'" (click)="abrirFormulario()">
+        <span class="nav-icon"><i class="bi bi-plus-lg"></i></span><span class="menu-text">Nueva Incidencia</span>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <div class="avatar">U</div>
+      <div class="sidebar-user-meta">
+        <strong>Usuario</strong>
+        <span>TELNETCOM PERU SAC</span>
+      </div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <header class="navbar-custom">
+      <div class="header-left">
+        <button class="header-icon" type="button" (click)="alternarSidebar()" aria-label="Abrir o cerrar menu">
+          <i class="bi bi-list"></i>
+        </button>
+        <div>
+          <span class="eyebrow">Portal de soporte</span>
+          <h3>Usuario</h3>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button
+          class="theme-toggle"
+          type="button"
+          (click)="alternarTema()"
+          [attr.aria-label]="modoOscuro ? 'Activar modo claro' : 'Activar modo oscuro'">
+          <i class="bi" [ngClass]="modoOscuro ? 'bi-sun' : 'bi-moon'"></i>
+        </button>
+        <button class="header-icon bell" type="button" aria-label="Notificaciones">
+          <i class="bi bi-bell"></i>
+        </button>
+        <button class="logout-btn" (click)="cerrarSesion()">Cerrar Sesion</button>
+      </div>
+    </header>
+
+    <section class="page-shell">
+      <div class="breadcrumb" *ngIf="seccionActual === 'inicio'">Inicio</div>
+      <div class="breadcrumb" *ngIf="seccionActual === 'incidencias'">Inicio / Mis Incidencias</div>
+      <div class="breadcrumb" *ngIf="seccionActual === 'crear'">Inicio / Nueva Incidencia</div>
+
+      <div class="page-header" *ngIf="seccionActual === 'inicio'">
+        <div>
+          <h1 class="page-title">Inicio</h1>
+          <p class="page-subtitle">Vista general de tus solicitudes y estado de atencion</p>
+        </div>
+      </div>
+
+      <div class="page-header" *ngIf="seccionActual === 'incidencias'">
+        <div>
+          <h1 class="page-title">Mis Incidencias</h1>
+          <p class="page-subtitle">Consulta el estado, prioridad y tecnico asignado de tus tickets</p>
+        </div>
+      </div>
+
+      <div class="page-header" *ngIf="seccionActual === 'crear'">
+        <div>
+          <h1 class="page-title">Nueva Incidencia</h1>
+          <p class="page-subtitle">Registra una nueva solicitud de soporte tecnico</p>
+        </div>
+      </div>
+
+      <div class="notice-stack" *ngIf="mensajeGeneral || errorGeneral">
+        <div class="app-notice success" *ngIf="mensajeGeneral">{{ mensajeGeneral }}</div>
+        <div class="app-notice error" *ngIf="errorGeneral">{{ errorGeneral }}</div>
+      </div>
+
+      <section class="stats-grid" *ngIf="seccionActual === 'inicio'">
+        <article class="stat-card stat-blue">
+          <div class="stat-card-header">
+            <div class="stat-icon"><i class="bi bi-ticket-detailed"></i></div>
+          </div>
+          <strong>{{ dashboardUsuario?.generadas ?? incidencias.length }}</strong>
+          <span>Total Incidencias</span>
+        </article>
+
+        <article class="stat-card stat-orange">
+          <div class="stat-card-header">
+            <div class="stat-icon"><i class="bi bi-exclamation-circle"></i></div>
+          </div>
+          <strong>{{ ticketsAbiertos }}</strong>
+          <span>Abiertas</span>
+        </article>
+
+        <article class="stat-card stat-yellow">
+          <div class="stat-card-header">
+            <div class="stat-icon"><i class="bi bi-clock-history"></i></div>
+          </div>
+          <strong>{{ ticketsEnProgreso }}</strong>
+          <span>En Progreso</span>
+        </article>
+
+        <article class="stat-card stat-green">
+          <div class="stat-card-header">
+            <div class="stat-icon"><i class="bi bi-check-circle"></i></div>
+          </div>
+          <strong>{{ dashboardUsuario?.resueltas ?? ticketsResueltos }}</strong>
+          <span>Resueltas</span>
+        </article>
+      </section>
+
+      <section class="action-card" *ngIf="seccionActual === 'inicio'">
+        <div>
+          <h3>Acceso rapido</h3>
+          <p class="section-subtitle">Revisa tus tickets o registra una nueva incidencia.</p>
+        </div>
+
+        <div class="page-actions">
+          <button class="btn-secondary-ui" type="button" (click)="cambiarSeccion('incidencias')">
+            Ver Mis Incidencias
+          </button>
+          <button class="btn-primary-ui" type="button" (click)="abrirFormulario()">
+            <span><i class="bi bi-plus-lg"></i></span> Nueva Incidencia
+          </button>
+        </div>
+      </section>
+
+      <section class="action-card" *ngIf="seccionActual === 'incidencias'">
+        <div class="search-box">
+          <span><i class="bi bi-search"></i></span>
+          <input
+            type="text"
+            placeholder="Buscar incidencia por titulo, estado o tecnico"
+            [(ngModel)]="busquedaIncidencias">
+        </div>
+
+        <button class="btn-primary-ui" type="button" (click)="abrirFormulario()">
+          <span><i class="bi bi-plus-lg"></i></span> Nueva Incidencia
+        </button>
+      </section>
+
+      <section class="data-card" *ngIf="seccionActual === 'crear'">
+        <div class="section-header">
+          <div>
+            <h3>Nueva Incidencia</h3>
+            <p class="section-subtitle">Registra los detalles del problema para asignarlo correctamente.</p>
+          </div>
+        </div>
+
+        <p class="form-error" *ngIf="errorFormulario">{{ errorFormulario }}</p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Titulo</label>
+            <input
+              class="form-control"
+              type="text"
+              placeholder="Falla de red en oficina principal"
+              [(ngModel)]="titulo">
+          </div>
+
+          <div class="form-group">
+            <label>Prioridad</label>
+            <select class="form-control" [(ngModel)]="prioridad">
+              <option value="BAJA">Baja</option>
+              <option value="MEDIA">Media</option>
+              <option value="ALTA">Alta</option>
+              <option value="CRITICA">Critica</option>
+            </select>
+          </div>
+
+          <div class="form-group full">
+            <label>Descripcion</label>
+            <textarea
+              class="form-control"
+              rows="5"
+              placeholder="Describe el problema, zona afectada, hora aproximada y detalles visibles"
+              [(ngModel)]="descripcion"></textarea>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button class="btn-secondary-ui" type="button" (click)="cerrarFormulario()">Cancelar</button>
+          <button class="btn-primary-ui" type="button" (click)="crearTicket()">Crear Incidencia</button>
+        </div>
+      </section>
+
+      <section class="data-card" *ngIf="seccionActual === 'incidencias'">
+        <div class="section-header">
+          <div>
+            <h3>Incidencias Registradas</h3>
+            <p class="section-subtitle">Seguimiento de solicitudes, prioridad y tecnico asignado.</p>
+          </div>
+        </div>
+
+        <div class="table-shell">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Incidencia</th>
+                <th>Estado</th>
+                <th>Prioridad</th>
+                <th>Tecnico</th>
+                <th>Fecha</th>
+                <th>Seguimiento</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr *ngFor="let incidencia of incidenciasFiltradas">
+                <td><span class="mono">{{ idIncidencia(incidencia) }}</span></td>
+                <td>
+                  <strong>{{ incidencia.titulo }}</strong>
+                  <div class="section-subtitle">{{ incidencia.descripcion }}</div>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="'status-' + (incidencia.estado || '').toLowerCase()">
+                    {{ estadoTexto(incidencia.estado) }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="'priority-' + (incidencia.prioridad || '').toLowerCase()">
+                    {{ incidencia.prioridad }}
+                  </span>
+                </td>
+                <td>{{ incidencia.tecnicoAsignado || 'Sin asignar' }}</td>
+                <td>{{ incidencia.fechaCreacion || '-' }}</td>
+                <td>
+                  <button class="btn-secondary-ui" type="button" (click)="seleccionarIncidencia(incidencia)">
+                    Ver seguimiento
+                  </button>
+                </td>
+              </tr>
+
+              <tr *ngIf="incidenciasFiltradas.length === 0">
+                <td colspan="7">
+                  <div class="empty-state">No hay incidencias para mostrar.</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="data-card" *ngIf="seccionActual === 'incidencias' && incidenciaSeleccionada">
+        <div class="section-header">
+          <div>
+            <h3>Seguimiento de {{ idIncidencia(incidenciaSeleccionada) }}</h3>
+            <p class="section-subtitle">{{ incidenciaSeleccionada.titulo }}</p>
+          </div>
+        </div>
+
+        <div class="timeline" *ngIf="seguimientosSeleccionados.length > 0; else sinSeguimientoUsuario">
+          <div class="timeline-item" *ngFor="let seguimiento of seguimientosSeleccionados">
+            <div class="timeline-dot"></div>
+            <div>
+              <div class="timeline-title">
+                {{ estadoTexto(seguimiento.estado) }}
+                <small>{{ seguimiento.tipo }}</small>
+                <span>{{ seguimiento.fechaRegistro || '-' }}</span>
+              </div>
+              <p>{{ seguimiento.observacion }}</p>
+              <a *ngIf="seguimiento.adjuntoUrl" [href]="seguimiento.adjuntoUrl" target="_blank" rel="noopener">
+                Ver evidencia
+              </a>
+              <small>Actualizado por {{ seguimiento.registradoPor }}</small>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #sinSeguimientoUsuario>
+          <div class="empty-state">Aun no hay actualizaciones para esta incidencia.</div>
+        </ng-template>
+
+        <div class="data-card">
+          <h3>Agregar observacion</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Tipo</label>
+              <select class="form-control" [(ngModel)]="tipoObservacionUsuario">
+                <option value="OBSERVACION_USUARIO">Observacion del usuario</option>
+                <option value="INFORMACION_ADICIONAL">Informacion adicional</option>
+                <option value="EVIDENCIA_USUARIO">Evidencia del problema</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Evidencia / URL</label>
+              <input
+                class="form-control"
+                type="text"
+                placeholder="https://... o ruta de evidencia"
+                [(ngModel)]="adjuntoUsuarioUrl">
+            </div>
+
+            <div class="form-group full">
+              <label>Comentario</label>
+              <textarea
+                class="form-control"
+                rows="3"
+                placeholder="Agrega informacion adicional para soporte..."
+                [(ngModel)]="observacionUsuario"></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn-secondary-ui" type="button" (click)="agregarObservacionUsuario()">
+              Agregar Observacion
+            </button>
+            <button
+              class="btn-primary-ui"
+              type="button"
+              *ngIf="incidenciaSeleccionada.estado === 'RESUELTA_POR_TECNICO' || incidenciaSeleccionada.estado === 'RESUELTA'"
+              (click)="confirmarSolucion()">
+              Confirmar Solucion
+            </button>
+            <button
+              class="btn-secondary-ui"
+              type="button"
+              *ngIf="incidenciaSeleccionada.estado === 'RESUELTA_POR_TECNICO' || incidenciaSeleccionada.estado === 'RESUELTA'"
+              (click)="reabrirIncidencia()">
+              Reabrir
+            </button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+</div>
