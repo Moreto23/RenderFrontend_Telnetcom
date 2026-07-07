@@ -11,7 +11,7 @@ import {
 })
 export class IncidenciaService {
 
-  private apiUrl = 'http://localhost:8080/incidencias';
+  private apiUrl = 'https://backend-telnetcom-1.onrender.com/incidencias';
 
   constructor(
     private http: HttpClient

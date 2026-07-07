@@ -8,7 +8,7 @@ import { ReporteFiltros, ReporteIncidencias } from '../models/reporte.model';
 })
 export class ReporteService {
 
-  private apiUrl = 'http://localhost:8080/reportes';
+  private apiUrl = 'https://backend-telnetcom-1.onrender.com/reportes';
 
   constructor(private http: HttpClient) {}
 

@@ -12,7 +12,7 @@ import {
 })
 export class UsuarioService {
 
-  private apiUrl = 'http://localhost:8080/usuarios';
+  private apiUrl = 'https://backend-telnetcom-1.onrender.com/usuarios';
 
   constructor(private http: HttpClient) {}
 
