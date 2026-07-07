@@ -303,7 +303,7 @@ export class AdminComponent implements OnInit {
     const tramoProceso = abiertas + proceso;
     const tramoResueltas = tramoProceso + resueltas;
 
-    return `conic-gradient(#f97316 0 ${abiertas}%, #2563eb ${abiertas}% ${tramoProceso}%, #10b981 ${tramoProceso}% ${tramoResueltas}%, #e5e7eb ${tramoResueltas}% 100%)`;
+    return `conic-gradient(#f97316 0 ${abiertas}%, #0b3d87 ${abiertas}% ${tramoProceso}%, #10b981 ${tramoProceso}% ${tramoResueltas}%, #e5e7eb ${tramoResueltas}% 100%)`;
   }
 
   get maxAsignadasTecnico(): number {
